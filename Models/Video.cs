@@ -11,8 +11,14 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Models
         [Key]
         [Required]
         public int Id { get; set; }
-        public string Title { get; set; }   
+
+        [Required(ErrorMessage = "Title is required")]
+        public string Title { get; set; } 
+
+        [Required(ErrorMessage = "Description is required")]  
         public string Description { get; set; }
+
+        [Required(ErrorMessage = "Url is required")]
         public string Url { get; set; }
     }
 }
