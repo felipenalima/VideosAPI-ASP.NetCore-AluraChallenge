@@ -7,12 +7,13 @@ using VideosAPI_ASP.NetCore_AluraChallenge.Models;
 
 namespace VideosAPI_ASP.NetCore_AluraChallenge.Data
 {
-    public class VideoContext : DbContext
+    public class AppDbContext : DbContext
     {
-        public VideoContext(DbContextOptions<VideoContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
 
         public DbSet<Video> Videos { get; set; }
+        public DbSet<Category> Categories { get; set; }
     } 
 }
