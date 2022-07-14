@@ -10,8 +10,8 @@ using VideosAPI_ASP.NetCore_AluraChallenge.Data;
 namespace VideosAPI_ASP.NetCore_AluraChallenge.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220708195430_Create Db")]
-    partial class CreateDb
+    [Migration("20220714185442_Create Categories Db")]
+    partial class CreateCategoriesDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,6 +19,25 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("VideosAPI_ASP.NetCore_AluraChallenge.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
 
             modelBuilder.Entity("VideosAPI_ASP.NetCore_AluraChallenge.Models.Video", b =>
                 {
@@ -28,11 +47,13 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
 
                     b.Property<string>("Url")
                         .IsRequired()

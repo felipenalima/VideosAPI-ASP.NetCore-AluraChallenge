@@ -12,9 +12,9 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
     [Route("[controller]")]
     public class VideosController : ControllerBase
     {
-        private VideoContext _context ;
+        private AppDbContext _context ;
 
-        public VideosController(VideoContext context)
+        public VideosController(AppDbContext context)
         {
             _context = context;
         }
