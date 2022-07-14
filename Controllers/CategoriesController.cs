@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VideosAPI_ASP.NetCore_AluraChallenge.Data;
 using VideosAPI_ASP.NetCore_AluraChallenge.Models;
+using AutoMapper;
+using VideosAPI_ASP.NetCore_AluraChallenge.Data.DTO;
 
 namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
 {
@@ -14,10 +16,12 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
     public class CategoriesController : ControllerBase
     {
         private AppDbContext _context;
+        private IMapper _mapper;
 
-        public CategoriesController(AppDbContext context)
+        public CategoriesController(AppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -35,21 +39,24 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
             {
                 return NotFound();
             }
+            ReadCategoryDto readCategoryDto = _mapper.Map<ReadCategoryDto>(category);
 
-            return Ok(category);
+            return Ok(readCategoryDto);
         }
         
         [HttpPost]
-        public IActionResult CreateCategory([FromBody] Category createCategory)
+        public IActionResult CreateCategory([FromBody] CreateCategoryDto createCategoryDto)
         {
-            _context.Categories.Add(createCategory);
+            Category category = _mapper.Map<Category>(createCategoryDto); 
+
+            _context.Categories.Add(category);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetCategoryById), new {Id = createCategory.Id}, createCategory);
+            return CreatedAtAction(nameof(GetCategoryById), new {Id = category.Id}, category);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCategory(int id, [FromBody] Category updateCategory)
+        public IActionResult UpdateCategory(int id, [FromBody] UpdateCategoryDto updateCategoryDto)
         {
             Category category = _context.Categories.FirstOrDefault(category => category.Id == id);
 
@@ -58,8 +65,7 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
                 return NotFound();
             }
 
-            category.Title = updateCategory.Title;
-            category.Color = updateCategory.Color;
+            _mapper.Map(updateCategoryDto,category);
 
             _context.SaveChanges();
 
