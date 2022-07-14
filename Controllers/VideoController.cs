@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using VideosAPI_ASP.NetCore_AluraChallenge.Data;
 using VideosAPI_ASP.NetCore_AluraChallenge.Data.DTO;
@@ -14,10 +15,12 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
     public class VideosController : ControllerBase
     {
         private VideoContext _context ;
+        private IMapper _mapper;
 
-        public VideosController(VideoContext context)
+        public VideosController(VideoContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -32,13 +35,7 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
             Video video = _context.Videos.FirstOrDefault(video => video.Id == id);
             if(video != null)
             {
-                ReadVideoDto readVideoDto = new ReadVideoDto
-                {
-                    Title = video.Title,
-                    Description = video.Description,
-                    Url = video.Url,
-                    Date = DateTime.Now
-                };
+                ReadVideoDto readVideoDto = _mapper.Map<ReadVideoDto>(video);
 
                 return Ok(readVideoDto);
             }            
@@ -48,15 +45,11 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
         [HttpPost]
         public IActionResult CreateVideo([FromBody] CreateVideoDto videoDto)
         {
-            Video video = new Video 
-            {
-                Title = videoDto.Title,
-                Description = videoDto.Description,
-                Url = videoDto.Url
-            };
+            Video video = _mapper.Map<Video>(videoDto);
 
             _context.Videos.Add(video);
             _context.SaveChanges();
+
             return CreatedAtAction(nameof(GetVideosById), new {Id = video.Id}, video);
 
         }
@@ -71,9 +64,7 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
                 return NotFound();
             }
 
-            video.Title = videoDto.Title;
-            video.Description = videoDto.Description;
-            video.Url = videoDto.Url;
+            _mapper.Map(videoDto, video);
 
             _context.SaveChanges();
 

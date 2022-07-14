@@ -1,12 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using VideosAPI_ASP.NetCore_AluraChallenge.Data;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<VideoContext>(options => options.UseMySql(builder.Configuration.GetConnectionString("VideoConnection"), new MySqlServerVersion(new Version(8, 0))));;
-
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

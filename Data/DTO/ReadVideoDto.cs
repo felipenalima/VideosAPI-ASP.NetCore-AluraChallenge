@@ -25,6 +25,6 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Data.DTO
         [RegularExpression(@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$", ErrorMessage = "Url Invalid")]
         public string Url { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
     }
 }
