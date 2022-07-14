@@ -44,5 +44,40 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
             return CreatedAtAction(nameof(GetVideosById), new {Id = video.Id}, video);
 
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateVideo(int id, [FromBody] Video updateVideo)
+        {
+            Video video = _context.Videos.FirstOrDefault(video => video.Id == id);
+
+            if(video == null)
+            {
+                return NotFound();
+            }
+
+            video.Title = updateVideo.Title;
+            video.Description = updateVideo.Description;
+            video.Url = updateVideo.Url;
+
+            _context.SaveChanges();
+
+            return Ok(video);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteVideo(int id)
+        {
+            Video video = _context.Videos.FirstOrDefault(video => video.Id == id);
+
+            if(video == null)
+            {
+                return NotFound();
+            }
+
+            _context.Remove(video);
+            _context.SaveChanges();
+            
+            return Ok("This video removed");
+        }
     }
 }
