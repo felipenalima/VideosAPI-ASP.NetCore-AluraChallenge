@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VideosAPI_ASP.NetCore_AluraChallenge.Data;
+using VideosAPI_ASP.NetCore_AluraChallenge.Data.DTO;
 using VideosAPI_ASP.NetCore_AluraChallenge.Models;
 
 namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
@@ -31,14 +32,29 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
             Video video = _context.Videos.FirstOrDefault(video => video.Id == id);
             if(video != null)
             {
-                return Ok(video);
+                ReadVideoDto readVideoDto = new ReadVideoDto
+                {
+                    Title = video.Title,
+                    Description = video.Description,
+                    Url = video.Url,
+                    Date = DateTime.Now
+                };
+
+                return Ok(readVideoDto);
             }            
             return NotFound();
         }
 
         [HttpPost]
-        public IActionResult CreateVideo([FromBody] Video video)
+        public IActionResult CreateVideo([FromBody] CreateVideoDto videoDto)
         {
+            Video video = new Video 
+            {
+                Title = videoDto.Title,
+                Description = videoDto.Description,
+                Url = videoDto.Url
+            };
+
             _context.Videos.Add(video);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetVideosById), new {Id = video.Id}, video);
@@ -46,7 +62,7 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateVideo(int id, [FromBody] Video updateVideo)
+        public IActionResult UpdateVideo(int id, [FromBody] UpdateVideoDto videoDto)
         {
             Video video = _context.Videos.FirstOrDefault(video => video.Id == id);
 
@@ -55,9 +71,9 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
                 return NotFound();
             }
 
-            video.Title = updateVideo.Title;
-            video.Description = updateVideo.Description;
-            video.Url = updateVideo.Url;
+            video.Title = videoDto.Title;
+            video.Description = videoDto.Description;
+            video.Url = videoDto.Url;
 
             _context.SaveChanges();
 
