@@ -1,3 +1,4 @@
+using System.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,5 +47,41 @@ namespace VideosAPI_ASP.NetCore_AluraChallenge.Controllers
 
             return CreatedAtAction(nameof(GetCategoryById), new {Id = createCategory.Id}, createCategory);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateCategory(int id, [FromBody] Category updateCategory)
+        {
+            Category category = _context.Categories.FirstOrDefault(category => category.Id == id);
+
+            if(category == null)
+            {
+                return NotFound();
+            }
+
+            category.Title = updateCategory.Title;
+            category.Color = updateCategory.Color;
+
+            _context.SaveChanges();
+
+            return Ok(category);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCategory(int id)
+        {
+            Category category = _context.Categories.FirstOrDefault(category => category.Id == id);
+
+            if(category == null)
+            {
+                return NotFound();
+            }
+
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+            
+            return Ok("Delete Category Successfull");
+
+        }
+
     }
 }
